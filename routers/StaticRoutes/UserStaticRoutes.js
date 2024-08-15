@@ -32,6 +32,8 @@ router.get('/verifyForgot',staticController.verifyForgotGet);
 router.post('/verifyForgot',staticController.verifyForgotPost);
 router.get('/newpassword/:password/:cpassword',staticController.newPassword);
 
+router.get('/logout', staticController.userLogout);
+
 
 
 
