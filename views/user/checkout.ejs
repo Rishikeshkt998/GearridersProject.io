@@ -1,0 +1,102 @@
+<%-include('userheader')-%>
+    <section>
+        <div class="container mt-5 mb-5">
+            <h1 class="text-center">Checkout</h1>
+            <div id="alertmessage"></div>
+
+
+
+            <div class="row">
+
+                <div class="col-md-8">
+
+                    <div class="row" id="inner">
+                        <% if (addressList && addressList.length) { %>
+                            <% for (let i=0; i < addressList.length; i++) { %>
+                                <div class="col-md-12 mb-2">
+                                    <div class="card form-group p-2 " id="address<%=addressList[i]._id %>">
+                                        <div class="ms-3 mt-3">
+                                            <b>
+                                                <%= addressList[i].name %>
+                                                    <%= addressList[i].phone %>
+                                            </b>
+                                            <a href="/checkout/editaddress/<%= addressList[i]._id %>"><button class="float-end me-3 " style="text-decoration: none;"
+                                                >EDIT</button></a>
+                                        </div>
+                                        <p class="mt-3 ms-3">
+                                            <%= addressList[i].fulladdress %>, <%= addressList[i].landmark %>,
+                                                    <%= addressList[i].pincode %>, <%= addressList[i].alternatephone %>,
+                                                            <%= addressList[i].district %>,<%= addressList[i].state %>
+                                        </p>
+                                        <div class="d-flex col-md-8 mb-4">
+                                            <a
+                                                href="/payment/<%= addressList[i]._id %>/<%= addressList[i].name %>/<%= addressList[i].fulladdress %>/<%= addressList[i].pincode %>/<%= addressList[i].landmark %>/<%= addressList[i].district %>/<%= addressList[i].state %>/<%= addressList[i].phone %>/<%= addressList[i].alternatephone%>"><button
+                                                    class="btn  p-2 me-2 mt-2 fw-bold" onclick=""
+                                                    style="background-color: rgb(91, 154, 249);">Deliver
+                                                    Here</button></a>
+                                            <a href="/checkout/addressremove/<%=addressList[i]._id%>"><button
+                                                    class="btn  p-2 me-5 fw-bold mt-2  "
+                                                    style="background-color: rgb(249, 91, 91);">
+                                                    Remove</button></a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <% } %>
+                                    <% } else { %>
+                                        <div class="col-md-12 form-group p-5 alert-warning">
+                                            <b>Address list is empty</b>
+                                        </div>
+                                        <% } %>
+
+                    </div>
+                    <div class="card mb-4">
+                        <a style="text-decoration: none;color:black" href="/checkout/displayaddress">
+                            <div class="card col-md-12 form-group d-flex p-2 btn btn-outline-primary" id="buttonclick"
+                                data-bs-toggle="modal" data-bs-target="#editAddressModal">+ Add new Address</div>
+                        </a>
+
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            Order Summary
+                        </div>
+                        <div class="card-body">
+                            Display order summary here
+                            <ul class="list-group list-group-flush">
+                                <li
+                                    class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                                    Price(<%= totalProducts %> items)
+                                        <span id="actualamount">
+                                            <%= formatCurrency(totalProductAmount)%>
+                                        </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    Discount<span>
+                                        <%= formatCurrency(totalProductAmount-totalAmount)%>
+                                    </span></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    Shipping<span>Free</span></li>
+                                <li
+                                    class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                                    <div>
+                                        <strong>Total amount</strong>
+                                        <strong>
+                                            <p class="mb-0">(including VAT)</p>
+                                        </strong>
+                                    </div>
+                                    <span><strong id="totalAmount">
+                                            <%= formatCurrency(totalAmount)%>
+                                        </strong></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <%-include('userfooter')-%>

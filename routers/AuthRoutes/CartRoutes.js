@@ -1,0 +1,16 @@
+const express = require('express');
+const router = express.Router();
+
+
+const CartController = require('../../controller/cartsController');
+
+
+router.get('/incrementCount/:id', CartController.incrementQuantity);
+router.get('/decrementCount/:id', CartController.decrementQuantity);
+router.get('/carts', CartController.getCart);
+// router.post('/add/:productId/:image/:name/:price/:discount/:brandId/:categorieId/:slug', CartController.postCart);
+router.post('/add', CartController.postCart);
+router.get('/remove/:id', CartController.removeFromCart);
+
+
+module.exports = router;

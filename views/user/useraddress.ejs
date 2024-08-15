@@ -1,0 +1,236 @@
+
+<%- include('userheader') -%>
+
+<div class="container mt-4">
+    <header class="d-sm-flex align-items-center border-bottom mb-4 pb-3">
+        <h1 class="h2">Address Book</h1>
+        <div id="alertmessage"></div>
+    </header>
+    <% if (addressList && addressList.length) { %>
+        <% for (let i = 0; i < addressList.length; i++) { %>
+        <div class="col-md-12 col-lg-12 mb-4 " >
+            <div class="card form-group p-2"  id="address<%=addressList[i]._id %>" style="border-radius: 10px;box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.1);">
+                <div>
+                    <b>
+                        <%= addressList[i].name %> <%= addressList[i].phone %>
+                    </b>
+                    
+                </div>
+                <p class="mt-3">
+                    <%= addressList[i].fulladdress %>,<%= addressList[i].landmark%>,
+                    <%= addressList[i].pincode %>, <%= addressList[i].alternatephone %>,
+                    <%= addressList[i].district %>,
+                </p>
+                
+                <div class="d-flex justify-content-between mb-4">
+                    <a href="/profile/removeaddressbook/<%=addressList[i]._id%>">
+                        <button class="btn btn-outline-danger">
+                            <i class="fa fa-trash mr-1"></i> Remove
+                        </button>
+                    </a>
+                    <!-- <button class="btn btn-outline-secondary" style="text-decoration: none;" onclick="showEditForm('%= i %>')">EDIT</button>
+                     -->
+                    <a href="/profile/editaddressbook/<%=addressList[i]._id%>"><button class="btn btn-outline-secondary" style="text-decoration: none;" >EDIT</button></a>
+                </div>
+
+                
+            </div>
+         
+        </div>
+        <% } %>
+        <% } else { %>
+        <div class="col-md-12 form-group p-5 alert-warning">
+            <b>Address list is empty</b>
+        </div>
+        <% } %>
+        <div class="mb-4 " style="border-radius: 10px;box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.1);">
+            <a   style="text-decoration: none;color: #000;" href="/profile/addaddress">
+                <div style="color:#000"class="card col-md-12 form-group d-flex p-2 btn btn-outline-primary" id="buttonclick"
+                    data-bs-toggle="modal"style="background-color: aliceblue;" data-bs-target="#editAddressModal">+ Add new Address</div>
+            </a>
+           
+        </div>
+        
+        
+    </div>
+        
+        
+
+                    
+    
+</div>
+
+<script>
+    function showform() {
+            var form = document.getElementById("checkout-form");
+            var button = document.getElementById("buttonclick");
+
+            if (form.style.display === "none" || form.style.display === "") {
+                form.style.display = "block";
+                button.innerHTML = "- Cancel";
+            } else {
+                form.style.display = "none";
+                button.innerHTML = "+ Add new Address";
+            }
+        }
+
+
+
+        
+        function showEditForm(index) {
+        const editForm = document.getElementById(`edit-form${index}`);
+        if (editForm.style.display === 'none') {
+            editForm.style.display = 'block';
+        } else {
+            editForm.style.display = 'none';
+        }
+}
+
+function formValidate(){
+    const name = document.getElementById('name').value
+    const phone = document.getElementById('phone').value
+    const alterPhone = document.getElementById('alternatenumber').value
+    const Landmark = document.getElementById('Landmark').value
+    const pin = document.getElementById('pincode').value
+    const district = document.getElementById('district').value
+    const state = document.getElementById('state').value
+    const address = document.getElementById('fulladdress').value
+    if(!name.length || !phone.length || !alterPhone.length || !Landmark.length ||!pin.length || !address.length || !district.length||!state.length){
+        document.getElementById('alertmessage').innerHTML=`
+        <div class="alert alert-dismissible fade show alert-danger" role="alert">
+         <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="close"></button>
+             <strong>Input fields must be filled!</strong>
+      </div>`
+      return false;
+    }
+    return true;
+}
+
+
+function Alternatephonenumbervalidate() {
+    const alterphone= document.getElementById('alternatephone').value
+    const alternateerror = document.getElementById('error-alternatephone')
+    if (!alterphone.length) {
+        alternateerror.style.color = 'red'
+        alternateerror.innerHTML = 'alternate phone number is required*'
+        return false;
+    } else if (alterphone.length !== 10) {
+        alternateerror.style.color = 'red'
+        alternateerror.innerHTML = 'mobile number should be 10 numbers'
+        return false;
+    }
+    alternateerror.innerHTML = ''
+    return true;
+}
+function landmarkvalidate() {
+    const landmark = document.getElementById('landmark').value
+    const landmarkerror = document.getElementById('error-landmark')
+    if (!landmark.length) {
+        landmarkerror.style.color = 'red'
+        landmarkerror.innerHTML = 'landmark is Required*'
+        return false;
+    } else if (landmark .length < 10) {
+        landmarkerror.style.color = 'red'
+        landmarkerror.innerHTML = 'write altest 10 characters *'
+        return false;
+    }
+    landmarkerror.innerHTML = ''
+    return true;
+}
+function districtValidate() {
+    const district = document.getElementById('disctrict').value
+    const districterror = document.getElementById('error-district')
+    if (!district.length) {
+        districterror.style.color = 'red'
+        districterror.innerHTML = 'district is Required*'
+        return false;
+    } else if (district.length < 4 || district.length > 10) {
+        districterror.style.color = 'red'
+        districterror.innerHTML = 'name must has 4-10 charachers *'
+        return false;
+    }
+    districterror.innerHTML = ''
+    return true;
+}
+function stateValidate() {
+    const state = document.getElementById('state').value
+    const stateerror = document.getElementById('error-state')
+    if (!state.length) {
+        stateerror.style.color = 'red'
+        stateerror.innerHTML = 'state is Required*'
+        return false;
+    } else if (state.length < 4 || state.length > 10) {
+        stateerror.style.color = 'red'
+        stateerror.innerHTML = 'write altest 10 characters *'
+        return false;
+    }
+    stateerror.innerHTML = ''
+    return true;
+}
+function PinValidate() {
+    const pin = document.getElementById('pincode').value
+    const pinError = document.getElementById('error-pincode')
+    if (!pin.length) {
+        pinError.style.color = 'red'
+        pinError.innerHTML = 'This field is Required*'
+        return false;
+    } else if (pin.length !== 6) {
+        pinError.style.color = 'red'
+        pinError.innerHTML = 'pin must be 6 numbers'
+        return false;
+    }
+    // pinError.style.color = 'green'
+    pinError.innerHTML = ''
+    return true;
+}
+function AddressValidate() {
+    const address = document.getElementById('fulladdress').value
+    const addressError = document.getElementById('error-fulladdress')
+    if (!address.length) {
+        addressError.style.color = 'red'
+        addressError.innerHTML = 'This field is required*'
+        return false;
+    } else if (address.length < 10) {
+        addressError.style.color = 'red'
+        addressError.innerHTML = 'must have to write atlest 10 charachers*'
+        return false;
+    }
+    // addressError.style.color = 'green'
+    addressError.innerHTML = ''
+    return true;
+}
+function Phonevalidate() {
+    const phone = document.getElementById('phone').value
+    const phoneError = document.getElementById('error-phone')
+    if (!phone.length) {
+        phoneError.style.color = 'red'
+        phoneError.innerHTML = 'This field is required*'
+        return false;
+    } else if (phone.length !== 10) {
+        phoneError.style.color = 'red'
+        phoneError.innerHTML = 'Phone number should be 10 numbers'
+        return false;
+    }
+    // phoneError.style.color = 'green'
+    phoneError.innerHTML = ''
+}
+function NameValidate() {
+    const name = document.getElementById('name').value
+    const nameError = document.getElementById('error-name')
+    if (!name.length) {
+        nameError.style.color = 'red'
+        nameError.innerHTML = 'This field is required*'
+        return false
+    } else if (name.length < 4 || name.length > 20) {
+        nameError.style.color = 'red'
+        nameError.innerHTML = 'name must has 4-20 charachers*'
+        return false
+    }
+    // nameError.style.color = 'green'
+    nameError.innerHTML = ' '
+    return true;
+}
+
+</script>
+
+<%- include('userfooter') -%>
