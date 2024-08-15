@@ -39,10 +39,9 @@
                 <div style="margin-left: 5%;margin-top: 5%;margin-bottom: 5%;" class=" d-flex">
 
                     <% for (let i=0; i < bannerData.image.length; i++) { %>
-                        <img src="http://localhost:3000/<%= bannerData.image[i] %>" style="height: 90px;width: 90px;"
+                        <img src="<%= bannerData.image[i] %>" style="height: 90px;width: 90px;"
                             alt="image">
-
-                        <a href="/banner/deletebannerImages/<%=bannerData._id %>/<%=bannerData.image[i]  %>"
+                        <a href="/banner/deletebannerImages?id=<%=bannerData._id %>&image=<%=bannerData.image[i] %>"
                             class="text-danger" onclick="return confirm('Are you sure want to delete this product?')"><i
                                 class="fas fa-trash fa-lg mx-1"></i></a>
                         <% } %>

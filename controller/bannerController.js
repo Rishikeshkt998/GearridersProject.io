@@ -2,6 +2,7 @@ const Product = require('../models/product');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const banner= require('../models/banner');
+const {savetocloudinary}=require("../utils/cloudinary")
 
 async function bannerView (req, res) {
     try {
@@ -42,14 +43,19 @@ async function postBanner(req, res) {
 
     if (data) {
         try {
-            const croppedImages = req.files.map(file => file.filename);
-            console.log(croppedImages);
+            // const croppedImages = req.files.map(file => file.filename);
+            // console.log(croppedImages);
+            const uploadPromises = req.files.map(file => savetocloudinary(file.path));
+
+            // Wait for all the uploads to complete
+            const cloudinaryUrls = await Promise.all(uploadPromises);
+            console.log(cloudinaryUrls);
 
             // Update product information
             const Banner = new banner({
                 title: req.body.title,
                 product: req.body.product,
-                image: [...croppedImages],
+                image: cloudinaryUrls,
                 description: req.body.description,
                 
                 
@@ -90,12 +96,18 @@ async function editBannerPost (req,res) {
             const bannerimages = await banner.findById(id);
             console.log(bannerimages);
             let compinedimage = [...bannerimages.image]
-            let arrayimage = []
+            // let arrayimage = []
             if (req.files.length) {
-                for (let i = 0; i < req.files.length; i++) {
-                    arrayimage[i] = req.files[i].filename
-                }
-                compinedimage = [...bannerimages.image, ...arrayimage]
+                // for (let i = 0; i < req.files.length; i++) {
+                //     arrayimage[i] = req.files[i].filename
+                // }
+                const uploadPromises = req.files.map(file => savetocloudinary(file.path));
+                const cloudinaryUrls = await Promise.all(uploadPromises);
+                console.log(cloudinaryUrls);
+
+  
+                compinedimage = [...bannerimages.image, ...cloudinaryUrls]
+                // compinedimage = [...bannerimages.image, ...arrayimage]
             }
 
             // Update product information
@@ -122,8 +134,8 @@ async function editBannerPost (req,res) {
 
 
 async function deleteBannerImage(req, res) {
-    const id = req.params.id;
-    const image = req.params.image;
+    const id = req.query.id;
+    const image = req.query.image;
     console.log(id, image);
     await banner.findByIdAndUpdate({ _id: id }, { $pull: { image: image } });
     req.session.message = {
